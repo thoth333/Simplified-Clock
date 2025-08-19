@@ -5,6 +5,9 @@ void main() {
   runApp(const MyApp());
 }
 
+const Color bgWhite = Color(0xFFEEEEEE);
+const Color bgBlack = Color(0xFF3E3E3E);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -13,10 +16,58 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
       home: const MyHomePage(title: '約分時計'),
+      locale: const Locale('ja', 'JP'),
+      supportedLocales: const [Locale('ja', 'JP'), Locale('en', 'US')],
+    );
+  }
+}
+
+const List<String> weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+// MySegmentedButton
+class MySegmentedButton extends StatefulWidget {
+  const MySegmentedButton({super.key});
+
+  @override
+  State<MySegmentedButton> createState() => _MySegmentedButtonState();
+}
+
+class _MySegmentedButtonState extends State<MySegmentedButton> {
+  Set<String> selected = {'A'};
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<String>(
+      segments: const <ButtonSegment<String>>[
+        ButtonSegment(value: 'A', label: Text('通常')),
+        ButtonSegment(value: 'B', label: Text('約分')),
+        ButtonSegment(value: 'C', label: Text('小数')),
+      ],
+      selected: selected,
+      onSelectionChanged: (newSelection) {
+        setState(() {
+          selected = newSelection;
+        });
+      },
+      showSelectedIcon: false,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return bgBlack; // 選択されたときの色
+          }
+          return bgWhite; // 非選択の色
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return bgWhite; // 選択中のテキスト色
+          }
+          return bgBlack; // 非選択のテキスト色
+        }),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      ),
     );
   }
 }
@@ -51,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  /*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,5 +122,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: bgWhite,
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Text(
+                '${_now.hour.toString().padLeft(2, '0')}:${_now.minute.toString().padLeft(2, '0')}',
+                style: TextStyle(fontSize: 100),
+              ),
+              Text(
+                '${_now.month.toString().padLeft(2, '0')}/${_now.day.toString().padLeft(2, '0')} ${weekdays[_now.weekday - 1]}',
+                style: TextStyle(fontSize: 30),
+              ),
+              MySegmentedButton(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+
+  /*
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: ShapeDecoration(
+            color: const Color(0xFFEEEEEE),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          */
 }
