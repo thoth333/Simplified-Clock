@@ -170,9 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(fontSize: 100),
           ),
           Text(
-            _now.day == 0
-                ? '∞'
-                : '${reducedMonth.toString().padLeft(2, '0')}/${reducedDay.toString().padLeft(2, '0')} ${weekdays[_now.weekday - 1]}',
+            '${reducedMonth.toString().padLeft(2, '0')}/${reducedDay.toString().padLeft(2, '0')} ${weekdays[_now.weekday - 1]}',
             style: TextStyle(fontSize: 30),
           ),
         ],
@@ -200,9 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(fontSize: 100),
           ),
           Text(
-            _now.day == 0
-                ? '∞'
-                : '${_now.day == 0 ? '∞' : formatDecimal(decimalDate)} ${weekdays[_now.weekday - 1]}',
+            '${formatDecimal(decimalDate)} ${weekdays[_now.weekday - 1]}',
             style: TextStyle(fontSize: 30),
           ),
         ],
